@@ -2,16 +2,25 @@ import React from "react";
 import { Formik, Form, Field } from "formik";
 import * as Yup from "yup";
 import img from "./assets/img.webp";
-import './form.css'
+import './form.css';
 
 const validationSchema = Yup.object({
   name: Yup.string().required("Name is required"),
+
   email: Yup.string()
-    .oneOf(["regex@gmail.com"], 'Email must be regex@gmail.com')
+    .matches(
+      /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/,
+      "Invalid email format"
+    )
     .required("Email is required"),
+
   password: Yup.string()
-    .oneOf(["rishiME@199"], 'Password must be "rishiME@199"')
+    .matches(
+      /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/,
+      "Password must be at least 8 characters long, contain one uppercase letter, one lowercase letter, one number, and one special character"
+    )
     .required("Password is required"),
+
   confirmPassword: Yup.string()
     .oneOf([Yup.ref("password"), null], "Passwords must match")
     .required("Confirm password is required"),
@@ -21,7 +30,7 @@ function form() {
   return (
     <div id="form_container">
       <div id="form_input">
-      <h1>Welcome!</h1>
+        <h1>Welcome!</h1>
         <Formik
           initialValues={{
             name: "",
@@ -116,9 +125,10 @@ function form() {
                 </Field>
               </div>
 
-              <button type="submit" 
-               className={`button ${isValid && dirty ? "button-enabled" : "button-disabled"}`}
-              disabled={!(isValid && dirty)}>
+              <button type="submit"
+                className={`button ${isValid && dirty ? "button-enabled" : "button-disabled"}`}
+                disabled={!(isValid && dirty)}
+              >
                 Sign Up
               </button>
             </Form>
